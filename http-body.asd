@@ -18,9 +18,11 @@
   :license "BSD 2-Clause"
   :depends-on (:fast-http
                :xsubseq
-               :jsown
+               :st-json
                :trivial-utf-8
+               :trivial-gray-streams
                :fast-io
+               :flexi-streams
                :cl-utilities)
   :components ((:module "src"
                 :components

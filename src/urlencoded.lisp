@@ -101,6 +101,7 @@
                      (cons (utf-8-bytes-to-string (finish-output-buffer buffer)) nil))
                  (collect-value))))))))
 
+;; TODO: parse as streaming
 (defun urlencoded-parse (content-type stream)
   (declare (ignore content-type))
   (url-decode

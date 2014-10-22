@@ -1,8 +1,11 @@
 (in-package :cl-user)
 (defpackage http-body.json
   (:use :cl)
-  (:import-from :jsown
-                :parse)
+  (:import-from :st-json
+                :read-json
+                :jso-alist)
+  (:import-from :trivial-gray-streams
+                :fundamental-character-input-stream)
   (:import-from :trivial-utf-8
                 :utf-8-bytes-to-string)
   (:export :json-parse))
@@ -10,11 +13,10 @@
 
 (defun json-parse (content-type stream)
   (declare (ignore content-type))
-  (let ((buffer (make-array 1024 :element-type '(unsigned-byte 8))))
-    (cdr
-     (jsown:parse
-      (apply #'concatenate
-             'string
-             (loop for read-bytes = (read-sequence buffer stream)
-                   collect (utf-8-bytes-to-string buffer :end read-bytes)
-                   while (= read-bytes 1024)))))))
+  ;; Using st-json because it takes a stream and returns an association-list.
+  (st-json::jso-alist
+   (car
+    (st-json:read-json
+     (if (typep stream 'trivial-gray-streams:fundamental-character-input-stream)
+         stream
+         (flex:make-flexi-stream stream))))))
