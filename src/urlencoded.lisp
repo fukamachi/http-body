@@ -75,8 +75,10 @@
                    (* 16 (cond
                            ((digit-byte-char-p byte)
                             (digit-byte-char-to-integer byte))
-                           ((<= 65 byte 69)
-                            (- byte 55))
+                           ((<= #.(char-code #\A) byte #.(char-code #\F))
+                            (- byte #.(- (char-code #\A) 10)))
+                           ((<= #.(char-code #\a) byte #.(char-code #\f))
+                            (- byte #.(- (char-code #\a) 10)))
                            (T (error 'invalid-urlencoded)))))
              (goto parse-encoded-part-second)
 
@@ -86,8 +88,10 @@
                  (cond
                    ((digit-byte-char-p byte)
                     (digit-byte-char-to-integer byte))
-                   ((<= 65 byte 69)
-                    (- byte 55))
+                   ((<= #.(char-code #\A) byte #.(char-code #\F))
+                    (- byte #.(- (char-code #\A) 10)))
+                   ((<= #.(char-code #\a) byte #.(char-code #\f))
+                    (- byte #.(- (char-code #\a) 10)))
                    (T (error 'invalid-urlencoded))))
               buffer)
              (setq parsing-encoded-part nil)
