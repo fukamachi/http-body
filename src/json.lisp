@@ -11,11 +11,16 @@
   (:export :json-parse))
 (in-package :http-body.json)
 
+(defun ensure-car (thing)
+  (if (consp thing)
+      (car thing)
+      thing))
+
 (defun json-parse (content-type stream)
   (declare (ignore content-type))
   ;; Using st-json because it takes a stream and returns an association-list.
   (st-json::jso-alist
-   (car
+   (ensure-car
     (st-json:read-json
      (if (typep stream 'trivial-gray-streams:fundamental-character-input-stream)
          stream
