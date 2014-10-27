@@ -21,7 +21,7 @@
                :st-json
                :trivial-utf-8
                :trivial-gray-streams
-               :fast-io
+               :quri
                :flexi-streams
                :cl-utilities)
   :components ((:module "src"
