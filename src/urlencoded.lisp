@@ -3,10 +3,6 @@
   (:use :cl)
   (:import-from :quri
                 :url-decode-params)
-  (:import-from :xsubseq
-                :xsubseq
-                :xnconcf
-                :with-xsubseqs)
   (:export :urlencoded-parse))
 (in-package :http-body.urlencoded)
 
@@ -14,8 +10,11 @@
 (defun urlencoded-parse (content-type stream)
   (declare (ignore content-type))
   (url-decode-params
-   (with-xsubseqs (seq)
-     (loop with buffer = (make-array 1024 :element-type '(unsigned-byte 8))
-           for read-bytes = (read-sequence buffer stream)
-           do (xnconcf seq (xsubseq buffer 0 read-bytes))
-           while (= read-bytes 1024)))))
+   (if (typep stream 'flex:vector-stream)
+       (coerce (flex::vector-stream-vector stream) '(simple-array (unsigned-byte 8) (*)))
+       (apply #'concatenate
+              '(simple-array (unsigned-byte 8) (*))
+              (loop with buffer = (make-array 1024 :element-type '(unsigned-byte 8))
+                    for read-bytes = (read-sequence buffer stream)
+                    collect (subseq buffer 0 read-bytes)
+                    while (= read-bytes 1024))))))
