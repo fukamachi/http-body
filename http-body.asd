@@ -19,7 +19,6 @@
   :depends-on (:fast-http
                :xsubseq
                :st-json
-               :trivial-utf-8
                :trivial-gray-streams
                :quri
                :flexi-streams
