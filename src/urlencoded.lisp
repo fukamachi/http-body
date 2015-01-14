@@ -17,4 +17,5 @@
               (loop with buffer = (make-array 1024 :element-type '(unsigned-byte 8))
                     for read-bytes = (read-sequence buffer stream)
                     collect (subseq buffer 0 read-bytes)
-                    while (= read-bytes 1024))))))
+                    while (= read-bytes 1024))))
+   :lenient t))
