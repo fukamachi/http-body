@@ -71,6 +71,7 @@ Content-Disposition: form-data; name=\"upload4\"; filename=\"0\"
 
 (ok (association-list-p
      (multipart-parse "multipart/form-data; boundary=----------0xKhTmLbOuNdArY"
+                      (length *data*)
                       (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes *data*))))
     "association-list-p")
 

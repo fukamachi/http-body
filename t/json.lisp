@@ -2624,6 +2624,7 @@
 
 (ok (association-list-p
      (json-parse "application/json"
+                 (length *data*)
                  (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes *data*))))
     "association-list-p")
 

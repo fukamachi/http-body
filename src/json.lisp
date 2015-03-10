@@ -14,8 +14,8 @@
       (car thing)
       thing))
 
-(defun json-parse (content-type stream)
-  (declare (ignore content-type))
+(defun json-parse (content-type content-length stream)
+  (declare (ignore content-type content-length))
   ;; Using st-json because it takes a stream and returns an association-list.
   (st-json::jso-alist
    (ensure-car

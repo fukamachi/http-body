@@ -13,6 +13,7 @@
 
 (ok (association-list-p
      (urlencoded-parse "application/x-www-form-urlencoded"
+                       (length *data*)
                        (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes *data*))))
     "association-list-p")
 
