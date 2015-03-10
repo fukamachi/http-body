@@ -14,7 +14,12 @@
     (let ((parser (make-multipart-parser
                    content-type
                    (lambda (name headers field-meta body)
-                     (collect (cons name (list body field-meta headers))))))
-          (buffer (make-array content-length :element-type '(unsigned-byte 8))))
-      (read-sequence buffer stream)
-      (funcall parser buffer))))
+                     (collect (cons name (list body field-meta headers)))))))
+      (if content-length
+          (let ((buffer (make-array content-length :element-type '(unsigned-byte 8))))
+            (read-sequence buffer stream)
+            (funcall parser buffer))
+          (loop with buffer = (make-array 1024 :element-type '(unsigned-byte 8))
+                for read-bytes = (read-sequence buffer stream)
+                do (funcall parser (subseq buffer 0 read-bytes))
+                while (= read-bytes 1024))))))
