@@ -1,0 +1,19 @@
+language: common-lisp
+
+env:
+  matrix:
+    - LISP=sbcl
+    - LISP=ccl
+    - LISP=clisp
+
+install:
+  # Install cl-travis
+  - curl https://raw.githubusercontent.com/luismbo/cl-travis/master/install.sh | bash
+
+before_script:
+  - git clone https://github.com/fukamachi/proc-parse ~/lisp/proc-parse
+  - git clone https://github.com/Rudolph-Miller/jonathan ~/lisp/jonathan
+
+script:
+  - cl -l prove
+       -e '(or (prove:run :http-body-test) (uiop:quit -1))'
