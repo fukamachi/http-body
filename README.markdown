@@ -1,5 +1,7 @@
 # HTTP-Body
 
+[![Build Status](https://travis-ci.org/fukamachi/http-body.svg?branch=master)](https://travis-ci.org/fukamachi/http-body)
+
 HTTP-Body parses HTTP POST data and returns POST parameters. It supports application/x-www-form-urlencoded, application/json, and multipart/form-data.
 
 ## Usage
