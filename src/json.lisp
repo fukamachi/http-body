@@ -1,25 +1,16 @@
 (in-package :cl-user)
 (defpackage http-body.json
   (:use :cl)
-  (:import-from :st-json
-                :read-json
-                :jso-alist)
-  (:import-from :trivial-gray-streams
-                :fundamental-character-input-stream)
+  (:import-from :http-body.util
+                :slurp-stream
+                :detect-charset)
+  (:import-from :jonathan
+                :parse)
   (:export :json-parse))
 (in-package :http-body.json)
 
-(defun ensure-car (thing)
-  (if (consp thing)
-      (car thing)
-      thing))
-
 (defun json-parse (content-type content-length stream)
-  (declare (ignore content-type content-length))
-  ;; Using st-json because it takes a stream and returns an association-list.
-  (st-json::jso-alist
-   (ensure-car
-    (st-json:read-json
-     (if (typep stream 'trivial-gray-streams:fundamental-character-input-stream)
-         stream
-         (flex:make-flexi-stream stream))))))
+  (parse
+   (babel:octets-to-string (slurp-stream stream content-length)
+                           :encoding (detect-charset content-type))
+   :as :alist))

@@ -17,18 +17,20 @@
   :author "Eitaro Fukamachi"
   :license "BSD 2-Clause"
   :depends-on (:fast-http
-               :xsubseq
-               :st-json
+               :jonathan
                :trivial-gray-streams
                :quri
                :flexi-streams
+               :babel
+               :cl-ppcre
                :cl-utilities)
   :components ((:module "src"
                 :components
                 ((:file "http-body" :depends-on ("multipart" "json" "urlencoded"))
                  (:file "multipart")
-                 (:file "json")
-                 (:file "urlencoded"))))
+                 (:file "json" :depends-on ("util"))
+                 (:file "urlencoded" :depends-on ("util"))
+                 (:file "util"))))
   :description "HTTP POST data parser for Common Lisp"
   :long-description
   #.(with-open-file (stream (merge-pathnames
