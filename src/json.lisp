@@ -12,5 +12,5 @@
 (defun json-parse (content-type content-length stream)
   (parse
    (babel:octets-to-string (slurp-stream stream content-length)
-                           :encoding (detect-charset content-type))
+                           :encoding (detect-charset content-type :utf-8))
    :as :alist))
