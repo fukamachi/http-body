@@ -6,7 +6,7 @@
         :prove))
 (in-package :http-body-test.multipart)
 
-(plan nil)
+(plan 2)
 
 (defparameter *data*
   (ppcre:regex-replace-all "\\n"
@@ -74,5 +74,13 @@ Content-Disposition: form-data; name=\"upload4\"; filename=\"0\"
                       (length *data*)
                       (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes *data*))))
     "association-list-p")
+
+(is-type (second
+          (assoc "text1"
+                 (multipart-parse "multipart/form-data; boundary=----------0xKhTmLbOuNdArY"
+                                  (length *data*)
+                                  (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes *data*)))
+                 :test #'string=))
+         'string)
 
 (finalize)

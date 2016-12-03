@@ -27,7 +27,7 @@
   :components ((:module "src"
                 :components
                 ((:file "http-body" :depends-on ("multipart" "json" "urlencoded"))
-                 (:file "multipart")
+                 (:file "multipart" :depends-on ("util"))
                  (:file "json" :depends-on ("util"))
                  (:file "urlencoded" :depends-on ("util"))
                  (:file "util"))))
