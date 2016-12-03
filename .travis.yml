@@ -1,18 +1,18 @@
 language: common-lisp
+sudo: false
 
 env:
+  global:
+    - PATH=~/.roswell/bin:$PATH
+    - ROSWELL_INSTALL_DIR=$HOME/.roswell
   matrix:
-    - LISP=sbcl
-    - LISP=ccl
+    - LISP=sbcl-bin
+    - LISP=ccl-bin
 
 install:
-  # Install cl-travis
-  - curl https://raw.githubusercontent.com/luismbo/cl-travis/master/install.sh | bash
-
-before_script:
-  - git clone https://github.com/fukamachi/proc-parse ~/lisp/proc-parse
-  - git clone https://github.com/Rudolph-Miller/jonathan ~/lisp/jonathan
+  # Install Roswell
+  - curl -L https://raw.githubusercontent.com/roswell/roswell/release/scripts/install-for-ci.sh | sh
+  - ros install prove
 
 script:
-  - cl -l prove
-       -e '(or (prove:run :http-body-test) (uiop:quit -1))'
+  - run-prove http-body-test.asd
