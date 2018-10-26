@@ -1,6 +1,6 @@
 (uiop:define-package http-body
   (:use :cl)
-  (:reexport-from :http-body.errors)
+  (:reexport :http-body.errors)
   (:export :parse))
 (in-package :http-body)
 
