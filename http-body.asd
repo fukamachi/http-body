@@ -28,10 +28,9 @@
                 :components
                 ((:file "http-body" :depends-on ("multipart" "json" "urlencoded"))
                  (:file "multipart" :depends-on ("util"))
-                 (:file "json" :depends-on ("errors" "util"))
+                 (:file "json" :depends-on ("util"))
                  (:file "urlencoded" :depends-on ("util"))
-                 (:file "util")
-                 (:file "errors"))))
+                 (:file "util"))))
   :description "HTTP POST data parser for Common Lisp"
   :long-description
   #.(with-open-file (stream (merge-pathnames
