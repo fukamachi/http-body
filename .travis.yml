@@ -15,5 +15,6 @@ install:
   - ros install prove
 
 script:
+  - ros -s http-body
   - ros -s http-body-test
   - run-prove http-body-test.asd
