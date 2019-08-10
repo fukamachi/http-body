@@ -2,11 +2,11 @@
 (defpackage http-body-test.multipart
   (:use :cl
         :http-body.multipart
-        :trivial-types
+        :assoc-utils
         :prove))
 (in-package :http-body-test.multipart)
 
-(plan 2)
+(plan 7)
 
 (defparameter *data*
   (ppcre:regex-replace-all "\\n"
@@ -28,6 +28,7 @@ Content-Disposition: form-data; name=\"select\"
 B
 ------------0xKhTmLbOuNdArY
 Content-Disposition: form-data; name=\"textarea\"
+Content-Type: text/plain
 
 Voluptatem cumque voluptate sit recusandae at. Et quas facere rerum unde esse. Sit est et voluptatem. Vel temporibus velit neque odio non.
 
@@ -66,21 +67,58 @@ Content-Type: application/octet-stream
 Content-Disposition: form-data; name=\"upload4\"; filename=\"0\"
 
 
+------------0xKhTmLbOuNdArY
+Content-Disposition: form-data; name=\"json\"
+Content-Type: application/json
+
+{\"id\": \"nitro_idiot\"}
 ------------0xKhTmLbOuNdArY--"
                            (format nil "~C~C" #\Return #\Newline)))
 
-(ok (association-list-p
+(defun data-stream ()
+  (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes *data*)))
+
+(ok (alistp
      (multipart-parse "multipart/form-data; boundary=----------0xKhTmLbOuNdArY"
                       (length *data*)
-                      (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes *data*))))
+                      (data-stream)))
     "association-list-p")
 
-(is-type (second
-          (assoc "text1"
-                 (multipart-parse "multipart/form-data; boundary=----------0xKhTmLbOuNdArY"
-                                  (length *data*)
-                                  (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes *data*)))
-                 :test #'string=))
-         'string)
+(let ((value (multipart-parse "multipart/form-data; boundary=----------0xKhTmLbOuNdArY"
+                              (length *data*)
+                              (data-stream))))
+  (subtest "text1"
+    (let ((text1 (aget value "text1")))
+      (is (first text1) "Ratione accusamus aspernatur aliquam")
+      (is (hash-alist (second text1))
+          '(("name" . "text1")))
+      (is (hash-alist (third text1))
+          '(("content-disposition" . "form-data; name=\"text1\"")))))
+  (subtest "text2"
+    (let ((text2 (aget value "text2")))
+      (is (first text2) "")
+      (is (hash-alist (second text2))
+          '(("name" . "text2")))
+      (is (hash-alist (third text2))
+          '(("content-disposition" . "form-data; name=\"text2\"")))))
+  (subtest "select"
+    (let ((select (remove-if-not (lambda (key) (equal key "select"))
+                                 value
+                                 :key #'car)))
+      (is (length select) 2)
+      (is (second (first select)) "A")
+      (is (second (second select)) "B")))
+  (subtest "textarea"
+    (let ((textarea (aget value "textarea")))
+      (is (ppcre:regex-replace-all (format nil "~C" #\Return) (first textarea) "")
+          "Voluptatem cumque voluptate sit recusandae at. Et quas facere rerum unde esse. Sit est et voluptatem. Vel temporibus velit neque odio non.
+
+Molestias rerum ut sapiente facere repellendus illo. Eum nulla quis aut. Quidem voluptas vitae ipsam officia voluptatibus eveniet. Aspernatur cupiditate ratione aliquam quidem corrupti. Eos sunt rerum non optio culpa.")))
+  (subtest "upload"
+    (let ((upload (aget value "upload")))
+      (is-type (first upload) '(vector (unsigned-byte 8)))))
+  (subtest "json"
+    (let ((json (aget value "json")))
+      (is (first json) '(("id" . "nitro_idiot"))))))
 
 (finalize)

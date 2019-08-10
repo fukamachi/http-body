@@ -26,8 +26,8 @@
                :cl-utilities)
   :components ((:module "src"
                 :components
-                ((:file "http-body" :depends-on ("multipart" "json" "urlencoded"))
-                 (:file "multipart" :depends-on ("util"))
+                ((:file "http-body" :depends-on ("multipart" "json" "urlencoded" "util"))
+                 (:file "multipart" :depends-on ("json" "urlencoded" "util"))
                  (:file "json" :depends-on ("util"))
                  (:file "urlencoded" :depends-on ("util"))
                  (:file "util"))))

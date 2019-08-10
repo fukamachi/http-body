@@ -14,7 +14,7 @@
   :depends-on (:http-body
                :cl-ppcre
                :trivial-utf-8
-               :trivial-types
+               :assoc-utils
                :flexi-streams
                :prove)
   :components ((:module "t"

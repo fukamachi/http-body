@@ -4,9 +4,16 @@
   (:import-from :flexi-streams
                 :vector-stream
                 :vector-stream-vector)
-  (:export :slurp-stream
+  (:export :starts-with
+           :slurp-stream
            :detect-charset))
 (in-package :http-body.util)
+
+(defun starts-with (prefix string)
+  (check-type prefix string)
+  (check-type string string)
+  (and (<= (length prefix) (length string))
+       (string-equal prefix string :end2 (length prefix))))
 
 (defun slurp-stream (stream &optional content-length)
   (if (typep stream 'flex:vector-stream)

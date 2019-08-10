@@ -2,7 +2,7 @@
 (defpackage http-body-test.json
   (:use :cl
         :http-body.json
-        :trivial-types
+        :assoc-utils
         :prove))
 (in-package :http-body-test.json)
 
@@ -2622,10 +2622,10 @@
   }
 ]")
 
-(ok (association-list-p
-     (json-parse "application/json"
-                 (length *data*)
-                 (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes *data*))))
+(ok (every #'alistp
+           (json-parse "application/json"
+                       (length *data*)
+                       (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes *data*))))
     "association-list-p")
 
 (finalize)

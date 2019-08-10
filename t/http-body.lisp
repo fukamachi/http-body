@@ -2,7 +2,7 @@
 (defpackage http-body-test
   (:use :cl
         :http-body
-        :trivial-types
+        :assoc-utils
         :prove))
 (in-package :http-body-test)
 
@@ -22,7 +22,7 @@
 
 (let ((data (format nil "------------0xKhTmLbOuNdArY~C~CContent-Disposition: form-data; name=\"name\"~:*~:*~C~C~:*~:*~C~CEitaro~:*~:*~C~C------------0xKhTmLbOuNdArY--"
                     #\Return #\Newline)))
-  (ok (association-list-p
+  (ok (alistp
        (parse "multipart/form-data; boundary=----------0xKhTmLbOuNdArY"
               (length data)
               (flex:make-in-memory-input-stream (trivial-utf-8:string-to-utf-8-bytes data))))

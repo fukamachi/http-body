@@ -1,6 +1,8 @@
 (in-package :cl-user)
 (defpackage http-body
   (:use :cl)
+  (:import-from :http-body.util
+                :starts-with)
   (:export :parse))
 (in-package :http-body)
 
@@ -11,7 +13,6 @@
 
 (defun parse (content-type content-length stream)
   (loop for (type . fn) in *content-type-map*
-        when (and (<= (length type) (length content-type))
-                  (string-equal content-type type :end1 (length type)))
+        when (starts-with type content-type)
           do (return-from parse (values (funcall fn content-type content-length stream) t)))
   (values nil nil))
