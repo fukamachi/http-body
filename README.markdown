@@ -27,13 +27,6 @@ If the Content-Type of first argument isn't supported, it returns `NIL`.
 
 ## Installation
 
-```
-mkdir -p ~/common-lisp
-cd ~/common-lisp
-git clone https://github.com/fukamachi/xsubseq
-git clone https://github.com/fukamachi/fast-http
-```
-
 ```common-lisp
 (ql:quickload :http-body)
 ```
