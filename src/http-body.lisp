@@ -14,5 +14,7 @@
 (defun parse (content-type content-length stream)
   (loop for (type . fn) in *content-type-map*
         when (starts-with type content-type)
-          do (return-from parse (values (funcall fn content-type content-length stream) t)))
+          do (let ((results (multiple-value-list
+                              (funcall fn content-type content-length stream))))
+                (return-from parse (apply #'values (first results) t (rest results)))))
   (values nil nil))
