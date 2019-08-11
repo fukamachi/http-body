@@ -39,7 +39,7 @@
                                                 (urlencoded-parse content-type nil body))
                                                ((starts-with "multipart/" content-type)
                                                 (multipart-parse content-type nil body))
-                                               (t (slurp-stream body)))))
+                                               (t body))))
                        (collect-field-meta (cons name field-meta))
                        (collect-headers (cons name headers)))))))
       (if content-length
