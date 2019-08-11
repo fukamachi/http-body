@@ -89,36 +89,30 @@ Content-Type: application/json
                               (data-stream))))
   (subtest "text1"
     (let ((text1 (aget value "text1")))
-      (is (first text1) "Ratione accusamus aspernatur aliquam")
-      (is (hash-alist (second text1))
-          '(("name" . "text1")))
-      (is (hash-alist (third text1))
-          '(("content-disposition" . "form-data; name=\"text1\"")))))
+      (is text1 "Ratione accusamus aspernatur aliquam")))
   (subtest "text2"
     (let ((text2 (aget value "text2")))
-      (is (first text2) "")
-      (is (hash-alist (second text2))
-          '(("name" . "text2")))
-      (is (hash-alist (third text2))
-          '(("content-disposition" . "form-data; name=\"text2\"")))))
+      (is text2 "")))
   (subtest "select"
     (let ((select (remove-if-not (lambda (key) (equal key "select"))
                                  value
                                  :key #'car)))
       (is (length select) 2)
-      (is (second (first select)) "A")
-      (is (second (second select)) "B")))
+      (is (cdr (first select)) "A")
+      (is (cdr (second select)) "B")))
   (subtest "textarea"
     (let ((textarea (aget value "textarea")))
-      (is (ppcre:regex-replace-all (format nil "~C" #\Return) (first textarea) "")
+      (is-type textarea 'string)
+      (is (ppcre:regex-replace-all (format nil "~C" #\Return) textarea "")
           "Voluptatem cumque voluptate sit recusandae at. Et quas facere rerum unde esse. Sit est et voluptatem. Vel temporibus velit neque odio non.
 
 Molestias rerum ut sapiente facere repellendus illo. Eum nulla quis aut. Quidem voluptas vitae ipsam officia voluptatibus eveniet. Aspernatur cupiditate ratione aliquam quidem corrupti. Eos sunt rerum non optio culpa.")))
   (subtest "upload"
     (let ((upload (aget value "upload")))
-      (is-type (first upload) '(vector (unsigned-byte 8)))))
+      (is-type upload 'cons)
+      (is-type (first upload) 'stream)))
   (subtest "json"
     (let ((json (aget value "json")))
-      (is (first json) '(("id" . "nitro_idiot"))))))
+      (is json '(("id" . "nitro_idiot"))))))
 
 (finalize)

@@ -25,19 +25,20 @@
                    (lambda (name headers field-meta body)
                      (let ((content-type (gethash "content-type" headers)))
                        (collect (cons name
-                                      (list (cond
-                                              ((or
-                                                 ;; No Content-Type implies the body is a text data.
-                                                 (null content-type)
-                                                 ;; Convert the body into a text if the Content-Type is text.
-                                                 (starts-with "text/" content-type))
-                                               (babel:octets-to-string (slurp-stream body)))
-                                              ((starts-with "application/json" content-type)
-                                               (json-parse content-type nil body))
-                                              ((starts-with "application/x-www-form-urlencoded" content-type)
-                                               (urlencoded-parse content-type nil body))
-                                              (t (slurp-stream body)))
-                                            field-meta headers))))))))
+                                      (cond
+                                        ((gethash "filename" field-meta)
+                                         (list body field-meta headers))
+                                        ((or
+                                           ;; No Content-Type implies the body is a text data.
+                                           (null content-type)
+                                           ;; Convert the body into a text if the Content-Type is text.
+                                           (starts-with "text/" content-type))
+                                         (babel:octets-to-string (slurp-stream body)))
+                                        ((starts-with "application/json" content-type)
+                                         (json-parse content-type nil body))
+                                        ((starts-with "application/x-www-form-urlencoded" content-type)
+                                         (urlencoded-parse content-type nil body))
+                                        (t (slurp-stream body))))))))))
       (if content-length
           (let ((buffer (make-array content-length :element-type '(unsigned-byte 8))))
             (read-sequence buffer stream)
