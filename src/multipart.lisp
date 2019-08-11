@@ -26,7 +26,7 @@
                        (collect-params (cons name
                                              (cond
                                                ((gethash "filename" field-meta)
-                                                (list body field-meta headers))
+                                                (list body (gethash "filename" field-meta) content-type))
                                                ((or
                                                   ;; No Content-Type implies the body is a text data.
                                                   (null content-type)
