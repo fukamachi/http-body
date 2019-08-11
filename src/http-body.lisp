@@ -9,7 +9,7 @@
 (defparameter *content-type-map*
   '(("application/json" . http-body.json:json-parse)
     ("application/x-www-form-urlencoded" . http-body.urlencoded:urlencoded-parse)
-    ("multipart/form-data" . http-body.multipart:multipart-parse)))
+    ("multipart/" . http-body.multipart:multipart-parse)))
 
 (defun parse (content-type content-length stream)
   (loop for (type . fn) in *content-type-map*

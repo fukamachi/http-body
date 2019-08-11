@@ -38,6 +38,8 @@
                                          (json-parse content-type nil body))
                                         ((starts-with "application/x-www-form-urlencoded" content-type)
                                          (urlencoded-parse content-type nil body))
+                                        ((starts-with "multipart/" content-type)
+                                         (multipart-parse content-type nil body))
                                         (t (slurp-stream body))))))))))
       (if content-length
           (let ((buffer (make-array content-length :element-type '(unsigned-byte 8))))
