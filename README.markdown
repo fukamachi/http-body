@@ -6,7 +6,7 @@ HTTP-Body parses HTTP POST data and returns POST parameters. It supports applica
 
 ## Usage
 
-`http-body` package exports only a function `parse`, which takes exact 2 arguments -- a string of Content-Type and a stream of HTTP POST data.
+`http-body` package exports only a function `parse`, which takes exactly 2 arguments -- a string of Content-Type and a stream of HTTP POST data.
 
 ```common-lisp
 (http-body:parse "application/x-www-form-urlencoded"
