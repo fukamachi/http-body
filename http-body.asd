@@ -17,7 +17,7 @@
   :author "Eitaro Fukamachi"
   :license "BSD 2-Clause"
   :depends-on (:fast-http
-               :jonathan
+               :yason
                :trivial-gray-streams
                :quri
                :flexi-streams
